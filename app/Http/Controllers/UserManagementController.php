@@ -3,22 +3,44 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Kelas;
+use App\Models\UserModel;
 
 class UserManagementController extends Controller
 {
+    public $userModel;
+    public $kelasModel;
+    public function __construct()
+    {
+        $this->userModel = new UserModel();
+        $this->kelasModel = new Kelas();
+    }
+public function store(Request $request)
+    {
+        $this->userModel->create([
+            'nama' => $request->input('nama'),
+            'npm' => $request->input('npm'),
+            'kelas_id' => $request->input('kelas_id')
+        ]);
+
+        return redirect()->route('user-management.index');
+    }
      public function index()
     {
-        $users = [
-            [
-                'nama' => 'Qorina Qisthi Kamal',
-                'npm' => '2407051028',
-                'jurusan' => 'Ilmu Komputer',
-                'prodi' => 'Manajemen Informatika'
-            ]
-        ];
+        $users = $this->userModel->getUser();
         return view('user-management', compact('users'));
-
     }
+    public function create()
+    {
+        $kelasModel = new Kelas();
+        $kelas = $kelasModel->getKelas();
+        $data = [
+            'judul' => 'Tambah User',
+            'kelas' => $kelas
+        ];
+        return view('user-management-create', $data);
+    }
+
 public function viewData($nama=" ",$npm=" ",$jurusan=" ",$prodi=" ")
     {
         return view('detail-user', compact('nama','npm','jurusan','prodi'));
