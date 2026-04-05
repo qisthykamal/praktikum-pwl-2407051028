@@ -4,17 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class UserModel extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'user';
     protected $guarded = ['id'];
+    public $incrementing = false;
+    protected $keyType = 'string';
 
-     public function kelas()
+    public function kelas()
     {
-        return $this->belongsTo(KelasModel::class, 'kelas_id');
+        return $this->belongsTo(Kelas::class, 'kelas_id');
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            if(empty($model->{$model->getkeyName()})) {
+                $model->{$model->getkeyName()} = (string) Str::uuid();
+            }
+        });
     }
     public function getUser()
     {
