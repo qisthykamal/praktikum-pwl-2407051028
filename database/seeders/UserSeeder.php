@@ -1,45 +1,36 @@
 <?php
 
-
 namespace Database\Seeders;
 
-
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Kelas;
 use App\Models\UserModel;
+use App\Models\Kelas;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $users = [
-            [
-                'name' => 'Fikri',
-                'npm' => '2317051061',
-                'kelas_id' => Kelas::where('nama_kelas', 'A')->first()->id
-            ]
-        ];
-
+        $kelasB = Kelas::where('nama_kelas', 'B')->first();
+        $kelasA = Kelas::where('nama_kelas', 'A')->first();
 
         $dosen = UserModel::firstOrCreate([
-            'name' => 'DosenIlkomp',
-            'npm' => '1234567890',
-            'kelas_id' => Kelas::where('nama_kelas', 'B')->first()->id
-        ]);
+    'email' => 'dosen@gmail.com'
+], [
+    'name' => 'DosenIlkomp',
+    'password' => Hash::make('password')
+]);
+
+$dosen->assignRole('dosen');
 
 
-        $dosen->assignRole('dosen');
+$mahasiswa = UserModel::firstOrCreate([
+    'email' => 'mahasiswa@gmail.com'
+], [
+    'name' => 'MahasiswaIlkomp',
+    'password' => Hash::make('password')
+]);
 
-
-        $mahasiswa = UserModel::firstOrCreate([
-            'name' => 'MahasiswaIlkomp',
-            'npm' => '1234567891',
-            'kelas_id' => Kelas::where('nama_kelas', 'A')->first()->id
-        ]);
-
-        foreach ($users as $user) {
-            UserModel::create($user);
-        }
+$mahasiswa->assignRole('mahasiswa');
     }
 }

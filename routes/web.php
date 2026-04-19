@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserManagementController;
 
 Route::middleware(['auth', 'role:dosen'])->group(function () {
+    
+    Route::get('/user-management', function () {
+    return view('user_management');
+})->name('usermanagement');
     Route::get('/user-management', [UserManagementController::class, 'index'])->name('user-management.index');
     Route::get('/user-management/create', [UserManagementController::class, 'create'])->name('user-management.create');
     Route::post('/user-management', [UserManagementController::class, 'store'])->name('user-management.store');
